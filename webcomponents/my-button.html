@@ -1,0 +1,41 @@
+<html><head><meta charset="UTF-8"></head><body><dom-module id="my-button">
+
+  <style>
+
+  </style>
+
+  <template>
+    <div id="dialog" title="Dialog Title" style="display:none">Este es el texto del div del botón vulcanizado</div>
+    <button id="{{id}}" onclick="_showPopup()">
+      <content select=".leftImg"></content>{{value}}
+    </button>
+  </template>
+
+</dom-module>
+
+<script>
+  function _showPopup() {
+    $('#dialog').dialog();
+  }
+
+  Polymer({
+
+    is: 'my-button',
+
+    properties: {
+      id: {
+        type: String,
+        value: 'id'
+      },
+      value: {
+        type: String,
+        value: 'Botón'
+      }
+    },
+    ready: function() {
+      console.log('My button ready');
+    }
+  });
+
+</script>
+</body></html>
