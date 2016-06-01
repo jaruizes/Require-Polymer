@@ -1,13 +1,32 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <link rel="import" href="../js/libs/iron_a11y_keys_behaviour/iron_a11y_keys_behaviour.html">
 </head>
 <body>
 <dom-module id="num-cuenta">
 
     <style>
+        :host {
+            display: block;
+            --tooltip-visibility: hidden;
+        }
         input.invalid {
             border:1px solid #f00;
+        }
+
+        .tooltiptext {
+            visibility: var(--tooltip-visibility);
+            width: 200px;
+            background-color: dodgerblue;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px 10px 10px 10px;
+
+            /* Position the tooltip */
+            position: relative;
+            z-index: 1;
         }
     </style>
 
@@ -22,6 +41,8 @@
                    value="{{dc::blur}}">&nbsp;
             <input type="text" id="numcuenta" class="cuenta" size="10" maxlength="10" placeholder="1234567890"
                    value="{{cuenta::blur}}">
+            <input type="hidden" id="fullnumber">
+            <span class="tooltiptext">El número de cuenta está formado por ENTIDAD + OFICINA + DIG CONTROL + NUM CUENTA</span>
         </div>
         <div id="msg"></div>
 
@@ -58,6 +79,10 @@
 
         is: 'num-cuenta',
 
+        behaviors: [
+            Polymer.IronA11yKeysBehavior
+        ],
+
         properties: {
             label: {
                 type: String,
@@ -78,11 +103,27 @@
             cuenta: {
                 type: String,
                 observer: '_onCuentaChanged'
+            },
+            keyEventTarget: {
+                type: Object,
+                value: function() {
+                    return this.$.numcuentacomponent;
+                }
             }
         },
+
+        keyBindings: {
+            'f1': '_helpKey',
+            'f2': '_copyKey'
+        },
+
         ready: function () {
             console.log('Component ready');
             this.fieldsOK = [false, false, false, false];
+            this.tooltipHidden = true;
+            this.isValidCCC = false;
+            this.filledAllFields = false;
+            this.$.fullnumber.value = '-';
             $('.cuenta').autotab('cuenta', 'filter', 'number');
         },
         _onEntidadChanged: function (newValue, oldValue) {
@@ -99,14 +140,40 @@
         },
         _validarCampo: function (fieldId, value, maxlength) {
             this.fieldsOK[fieldId] = value && value.length == maxlength && !isNaN(value);
-            if (this.fieldsOK[0] && this.fieldsOK[1] && this.fieldsOK[2] && this.fieldsOK[3]) {
-                if (!validarCCC(this.$.entidad.value, this.$.oficina.value, this.$.dc.value, this.$.numcuenta.value)) {
+            this.filledAllFields = this.fieldsOK[0] && this.fieldsOK[1] && this.fieldsOK[2] && this.fieldsOK[3];
+            if (this.filledAllFields) {
+                this.$.fullnumber.value =this.$.entidad.value + this.$.oficina.value + this.$.dc.value + this.$.numcuenta.value;
+                this.isValidCCC = validarCCC(this.$.entidad.value, this.$.oficina.value, this.$.dc.value, this.$.numcuenta.value);
+                if (!this.isValidCCC) {
                     var els = Polymer.dom(this.root).querySelectorAll('.cuenta');
                     for (var i = 0; i < els.length; i++) {
                         els[i].className += ' invalid';
                     }
                 }
             }
+        },
+        _helpKey: function (event) {
+            event.preventDefault();
+            if (this.tooltipHidden) {
+                this.customStyle['--tooltip-visibility'] = 'visible';
+                this.tooltipHidden = false;
+            } else {
+                this.customStyle['--tooltip-visibility'] = 'hidden';
+                this.tooltipHidden = true;
+            }
+            this.updateStyles();
+        },
+        _copyKey: function (event) {
+            event.preventDefault();
+            if (this.filledAllFields) {
+                /*var select = this.$.entidad.select() +
+                             this.$.oficina.select() +
+                             this.$.dc.select() +
+                             this.$.numcuenta.select();*/
+                document.execCommand('copy', false, this.$.fullnumber.select());
+            }
+
+            //document.execCommand('copy', false, _this.$.input.select());
         }
     });
 
