@@ -2,14 +2,13 @@ requirejs.config({
     "baseUrl": "js/libs",
     "paths": {
         "jquery": "jquery/dist/jquery",
-        "jqueryUI": "jquery-ui/jquery-ui",
+        "jquery-autotab": "jquery-autotab/jquery.autotab.min",
         "app": "../",
         "components": "../components"
     },
     shim: {
-        "jqueryUI": {
-            export:"$" ,
-            deps: ["jquery"]
+        "jquery-autotab": {
+           deps: ["jquery"]
         }
     }
 });

@@ -26,7 +26,6 @@ define(function () {
                 root = document.getElementById(parentId);
             }
             root.appendChild(d);
-            console.log('Se ha pintado el componente ' + id);            
         },
         renderPolymer: function (id) {
             checkElementLink();
