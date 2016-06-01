@@ -18,6 +18,10 @@ define(['components/shared','jquery-autotab'], function(shared) {
             var el = document.createElement('num-cuenta');
             el.setAttribute('label', 'Introduce tu número de cuenta:');
             root.appendChild(el);
+
+            var e2 = document.createElement('num-cuenta');
+            e2.setAttribute('label', 'Introduce tu número de cuenta:');
+            root.appendChild(e2);
         }
     }
 });
