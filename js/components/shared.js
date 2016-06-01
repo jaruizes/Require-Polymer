@@ -1,8 +1,17 @@
 define(function () {
-    checkPolymerLib();
+    checkPolymerLibs();
 
-    function checkPolymerLib() {
-        if (!document.querySelector('link[href="libs/polymer/polymer.html"]')) {
+    function checkPolymerLibs() {
+        if (!document.querySelector('script[src="js/libs/webcomponentsjs/webcomponents-lite.js"]')) {
+            var webcomponentsScript = document.createElement('script');
+            webcomponentsScript.src = 'js/libs/webcomponentsjs/webcomponents-lite.js';
+            document.head.appendChild(webcomponentsScript);
+            console.log('Add Webcomponents js lib link to head');
+        } else {
+            console.log('Webcomponents js lib link already added to head');
+        }
+
+        if (!document.querySelector('link[href="js/libs/polymer/polymer.html"]')) {
             var polymerLink = document.createElement('link');
             polymerLink.rel = 'import';
             polymerLink.href = 'js/libs/polymer/polymer.html';
@@ -26,6 +35,12 @@ define(function () {
                 root = document.getElementById(parentId);
             }
             root.appendChild(d);
+        },
+        addComponentLink: function(name) {
+            var elementImportLink = document.createElement('link');
+            elementImportLink.rel = 'import';
+            elementImportLink.href = 'webcomponents/' + name + '.html';
+            document.head.appendChild(elementImportLink);
         },
         renderPolymer: function (id) {
             checkElementLink();

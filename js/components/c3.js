@@ -1,13 +1,15 @@
-define(['jquery-autotab'], function() {
+define(['components/shared','jquery-autotab'], function(shared) {
 
+    shared.addComponentLink('num-cuenta');
+    
     return {
         render: function() {
-            var elementImportLink = document.createElement('link');
+            /*var elementImportLink = document.createElement('link');
             elementImportLink.rel = 'import';
             elementImportLink.href = 'webcomponents/num-cuenta.html';
             document.head.appendChild(elementImportLink);
 
-            /*var elementImportCSS = document.createElement('link');
+            var elementImportCSS = document.createElement('link');
             elementImportCSS.rel = 'stylesheet';
             elementImportCSS.href = 'js/libs/jquery-ui/themes/smoothness/jquery-ui.css';
             document.head.appendChild(elementImportCSS);*/
